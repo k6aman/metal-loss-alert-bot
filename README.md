@@ -102,6 +102,16 @@ python -m bot.main --date 2026-09-29 --dry-run   # save the email to out/alert_p
 
 Flow: loss check → if any department is over 2% → Gemini summary → HTML email with the summary and the loss table (departments over the limit in red). If every department is within the limit, it prints "All departments within limit" and sends nothing. Email uses Python's built-in `smtplib`, so there is nothing extra to install.
 
+## Daily run (GitHub Actions)
+
+[`.github/workflows/daily-alert.yml`](.github/workflows/daily-alert.yml) runs the bot in GitHub's cloud every day at **9:00 AM IST** (03:30 UTC), so nothing runs on my PC.
+
+- **Secrets:** the keys from `.env` are saved as repository secrets (Settings → Secrets and variables → Actions): `GEMINI_API_KEY`, `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `ALERT_TO`. They are never in the code or the logs. The Sheet link is public, so it stays in `bot/config.py`.
+- **Manual run:** Actions tab → *Daily metal loss alert* → *Run workflow*. Optional inputs: a date (e.g. `2026-09-29`, a day with alerts) and *dry run* (do not send the email).
+- **Run log:** each run writes the loss table, the status and the AI summary to its job summary page.
+
+GitHub may start scheduled runs a few minutes late, and pauses them if the repo has no activity for 60 days.
+
 ## Status
 
 - [x] Step 1: Repo setup (README, .gitignore, requirements.txt)
@@ -109,5 +119,5 @@ Flow: loss check → if any department is over 2% → Gemini summary → HTML em
 - [x] Step 3: Calculate loss % per department and flag > 2%
 - [x] Step 4: Gemini summary
 - [x] Step 5: Email alert + `main.py`
-- [ ] Step 6: Daily run with GitHub Actions
+- [x] Step 6: Daily run with GitHub Actions
 - [ ] Step 7: Final README, screenshots, pin on profile
