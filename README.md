@@ -87,12 +87,27 @@ python -m bot.ai_summary --local             # latest day, local CSV
 
 Gemini gets the loss table and writes a 4–6 line summary: which departments crossed the limit, by how much, and one thing to check. If the main model is busy, it tries a lighter backup model and retries a few times. If the key is missing or every try fails, the bot prints a simple fallback summary instead of crashing. If no department is over the limit, Gemini is not called. The model names and retry settings are set in [`bot/config.py`](bot/config.py).
 
+### Email alert + full run
+
+1. Turn on [2-Step Verification](https://myaccount.google.com/signinoptions/twosv) for the Gmail account that sends the alert.
+2. Create an [App Password](https://myaccount.google.com/apppasswords) (16 letters). It is used instead of the normal Gmail password.
+3. Add to `.env`: `GMAIL_USER`, `GMAIL_APP_PASSWORD` and `ALERT_TO` (see [`.env.example`](.env.example)).
+4. Run the full bot:
+
+```bash
+python -m bot.main                           # latest day, from the Google Sheet
+python -m bot.main --date 2026-09-29         # a day with a department over 2%
+python -m bot.main --date 2026-09-29 --dry-run   # save the email to out/alert_preview.html, do not send
+```
+
+Flow: loss check → if any department is over 2% → Gemini summary → HTML email with the summary and the loss table (departments over the limit in red). If every department is within the limit, it prints "All departments within limit" and sends nothing. Email uses Python's built-in `smtplib`, so there is nothing extra to install.
+
 ## Status
 
 - [x] Step 1: Repo setup (README, .gitignore, requirements.txt)
 - [x] Step 2: Dummy production data in Google Sheets
 - [x] Step 3: Calculate loss % per department and flag > 2%
 - [x] Step 4: Gemini summary
-- [ ] Step 5: Email alert + `main.py`
+- [x] Step 5: Email alert + `main.py`
 - [ ] Step 6: Daily run with GitHub Actions
 - [ ] Step 7: Final README, screenshots, pin on profile

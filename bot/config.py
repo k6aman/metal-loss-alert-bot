@@ -21,3 +21,8 @@ LOSS_LIMIT_PCT = 2.0
 GEMINI_MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest"]
 GEMINI_TRIES = 3          # rounds over GEMINI_MODELS before using the fallback summary
 GEMINI_RETRY_WAIT_S = 10  # seconds to wait between rounds
+
+# Email alert (Gmail SMTP). Login details come from .env: GMAIL_USER, GMAIL_APP_PASSWORD, ALERT_TO
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = 465           # SSL
+PREVIEW_HTML = Path(__file__).parent.parent / "out" / "alert_preview.html"  # written by --dry-run
