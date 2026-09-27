@@ -1,0 +1,7 @@
+# Secrets (API keys, Gmail App Password)
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
