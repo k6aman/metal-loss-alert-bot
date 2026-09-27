@@ -1,0 +1,47 @@
+name: Daily metal loss alert
+
+on:
+  schedule:
+    - cron: "30 3 * * *"   # every day 03:30 UTC = 9:00 AM IST
+  workflow_dispatch:         # "Run workflow" button on the Actions tab
+    inputs:
+      date:
+        description: "Day to check (YYYY-MM-DD). Leave empty for the latest day."
+        required: false
+        default: ""
+      dry_run:
+        description: "Dry run: build the email but do not send it"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Run the bot
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          ALERT_TO: ${{ secrets.ALERT_TO }}
+          CHECK_DATE: ${{ inputs.date }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          args=()
+          if [ -n "$CHECK_DATE" ]; then args+=(--date "$CHECK_DATE"); fi
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          python -m bot.main "${args[@]}"
