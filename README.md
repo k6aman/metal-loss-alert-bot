@@ -18,6 +18,10 @@ In jewellery manufacturing, some gold or silver is lost at every step (casting, 
 
 ![GitHub Actions run](docs/screenshots/actions-run.png)
 
+**Job steps** (install packages, then run the bot):
+
+![GitHub Actions job steps](docs/screenshots/job-steps.png)
+
 ## How it works
 
 ```mermaid
