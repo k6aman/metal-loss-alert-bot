@@ -64,13 +64,23 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+Check loss % per department (prints a table and lists departments over 2%):
+
+```bash
+python -m bot.loss_check                     # latest day, from the Google Sheet
+python -m bot.loss_check --date 2026-09-29   # a chosen day
+python -m bot.loss_check --local             # use the local CSV (offline)
+```
+
+The 2% limit and the Sheet link are set in [`bot/config.py`](bot/config.py).
+
 Create a `.env` file for secrets. It is never committed. The keys are added in later steps.
 
 ## Status
 
 - [x] Step 1: Repo setup (README, .gitignore, requirements.txt)
 - [x] Step 2: Dummy production data in Google Sheets
-- [ ] Step 3: Calculate loss % per department and flag > 2%
+- [x] Step 3: Calculate loss % per department and flag > 2%
 - [ ] Step 4: Gemini summary
 - [ ] Step 5: Email alert + `main.py`
 - [ ] Step 6: Daily run with GitHub Actions
