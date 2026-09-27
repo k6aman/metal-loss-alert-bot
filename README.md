@@ -74,14 +74,25 @@ python -m bot.loss_check --local             # use the local CSV (offline)
 
 The 2% limit and the Sheet link are set in [`bot/config.py`](bot/config.py).
 
-Create a `.env` file for secrets. It is never committed. The keys are added in later steps.
+### AI summary (Google Gemini)
+
+1. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey) (no card needed).
+2. Copy [`.env.example`](.env.example) to `.env` and paste the key as `GEMINI_API_KEY`. `.env` is never committed.
+3. Run:
+
+```bash
+python -m bot.ai_summary --date 2026-09-29   # a day with a department over 2%
+python -m bot.ai_summary --local             # latest day, local CSV
+```
+
+Gemini gets the loss table and writes a 4–6 line summary: which departments crossed the limit, by how much, and one thing to check. If the main model is busy, it tries a lighter backup model and retries a few times. If the key is missing or every try fails, the bot prints a simple fallback summary instead of crashing. If no department is over the limit, Gemini is not called. The model names and retry settings are set in [`bot/config.py`](bot/config.py).
 
 ## Status
 
 - [x] Step 1: Repo setup (README, .gitignore, requirements.txt)
 - [x] Step 2: Dummy production data in Google Sheets
 - [x] Step 3: Calculate loss % per department and flag > 2%
-- [ ] Step 4: Gemini summary
+- [x] Step 4: Gemini summary
 - [ ] Step 5: Email alert + `main.py`
 - [ ] Step 6: Daily run with GitHub Actions
 - [ ] Step 7: Final README, screenshots, pin on profile
