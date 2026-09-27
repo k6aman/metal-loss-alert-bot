@@ -5,3 +5,6 @@
 __pycache__/
 *.pyc
 .venv/
+
+# Local email preview (python -m bot.main --dry-run)
+out/
