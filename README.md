@@ -38,6 +38,24 @@ Scheduled daily by GitHub Actions (runs in the cloud, not on my PC)
 | Gmail SMTP (App Password) | Send the alert email |
 | GitHub Actions | Run the bot every day on a schedule |
 
+## Data
+
+Dummy production data: 30 days (1–30 Sep 2026) × 7 departments = 210 rows.
+
+| Column | Meaning |
+|---|---|
+| `date` | Production date |
+| `department` | Casting, Filing, Assembly, Diamond Setting, Final Polish, Polish Repair, Plating |
+| `metal_type` | 18K Gold, 14K Gold or Silver 925 |
+| `issue_weight_g` | Metal given to the department (grams) |
+| `return_weight_g` | Metal returned by the department (grams) |
+
+Loss % = (issue − return) ÷ issue × 100. Five rows are set above the 2% limit on purpose so the bot has alerts to send.
+
+- Generator: [`data/generate_dummy_data.py`](data/generate_dummy_data.py) (fixed seed, so it makes the same data every time)
+- Local copy: [`data/dummy_metal_loss.csv`](data/dummy_metal_loss.csv)
+- Published Google Sheet (CSV, read-only, no login needed): [dummy_metal_loss.csv](https://docs.google.com/spreadsheets/d/e/2PACX-1vQoY_WG5HV6JIMJINpsUofVehYBL2upPPFu6T_aVVLmdbvjD7_SESpfcyuiPl6hfGgCRfglvwXUUkWF/pub?output=csv)
+
 ## Run locally
 
 ```bash
@@ -51,7 +69,7 @@ Create a `.env` file for secrets. It is never committed. The keys are added in l
 ## Status
 
 - [x] Step 1: Repo setup (README, .gitignore, requirements.txt)
-- [ ] Step 2: Dummy production data in Google Sheets
+- [x] Step 2: Dummy production data in Google Sheets
 - [ ] Step 3: Calculate loss % per department and flag > 2%
 - [ ] Step 4: Gemini summary
 - [ ] Step 5: Email alert + `main.py`
